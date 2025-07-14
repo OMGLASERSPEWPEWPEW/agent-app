@@ -1,7 +1,13 @@
+# .gitignore
+# Path: agent-app/.gitignore
+
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# dependencies
+# Dependencies
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Expo
 .expo/
@@ -9,8 +15,7 @@ dist/
 web-build/
 expo-env.d.ts
 
-# Native
-.kotlin/
+# Native builds
 *.orig.*
 *.jks
 *.p8
@@ -18,20 +23,134 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
-# Metro
+# Metro bundler
 .metro-health-check*
 
-# debug
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+
+# Debug files
 npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# TypeScript
+*.tsbuildinfo
+
+# Local configuration files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary folders
+tmp/
+temp/
+
+# Log files
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like nyc
+coverage/
+.nyc_output/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Xcode (iOS)
+ios/build/
+ios/Pods/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+android/captures/
+android/gradlew.bat
+android/local.properties
+android/.idea/
+android/keystores/
+
+# React Native
+react-native-config.js
+
+# Flipper
+.flipper/
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods (iOS)
+ios/Pods/
+
+# EAS (Expo Application Services)
+.easignore
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
 # macOS
 .DS_Store
-*.pem
+.AppleDouble
+.LSOverride
 
-# local env files
-.env*.local
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
 
-# typescript
-*.tsbuildinfo
+# Linux
+*~
+
+# File length: 1,957 characters
