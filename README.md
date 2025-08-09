@@ -1,4 +1,4 @@
-# Agent App
+# Agent App Setup
 
 A React Native mobile app that connects to your AI agent server for intelligent assistance.
 
@@ -25,7 +25,7 @@ A React Native mobile app that connects to your AI agent server for intelligent 
 
 3. **Install dependencies**
    ```bash
-   npm install @expo/vector-icons @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack expo-linear-gradient react-native-safe-area-context react-native-screens expo-constants expo-device expo-network @react-native-async-storage/async-storage
+   npm install @expo/vector-icons @react-navigation/native @react-navigation/bottom-tabs @react-navigation/native-stack expo-linear-gradient react-native-safe-area-context react-native-screens expo-constants expo-device expo-network @react-native-async-storage/async-storage expo-file-system expo-sqlite
    ```
 
 4. **Add the source files**
@@ -78,94 +78,55 @@ agent-app/
 ### Default Server URL
 The app defaults to `http://192.168.1.100:3001` - update this in Settings for your network.
 
-## 📡 Features
+## 🛠️ Features
 
-### Home Screen
-- Server connection status
-- Quick access to chat and settings
-- Conversation starters from server
-- Server information display
+### Current Features
+- **Chat Interface**: Direct communication with AI agent
+- **Server Status**: Real-time connection monitoring
+- **Settings**: Configure server URL and test connection
+- **Cross-Platform**: Works on iOS and Android via Expo
 
-### Chat Screen
-- Real-time AI chat interface
-- Message history
-- Loading indicators
-- Error handling for connection issues
-- Support for conversation starters
+### App Store Compatibility
+The app is designed with Apple App Store and Google Play Store requirements in mind:
 
-### Settings Screen
-- Server URL configuration
-- Connection testing
-- Setup instructions
-- Troubleshooting help
-- App information
+- Uses only approved APIs and libraries
+- No sensitive permissions required
+- Self-contained with proper error handling
+- Clean, native-style interface design
 
-## 🛠 Development
-
-### Running the App
+## 📋 Development Scripts
 
 ```bash
 # Start development server
-npx expo start
+npm start
 
-# Run on iOS simulator (requires Xcode)
-npx expo start --ios
+# Run on iOS simulator
+npm run ios
 
 # Run on Android emulator
-npx expo start --android
+npm run android
 
-# Run in web browser
-npx expo start --web
+# Run in web browser (for testing)
+npm run web
 ```
 
-### Building for Production
+## 🔗 Connection Types
 
-```bash
-# Build for iOS (requires Apple Developer account)
-eas build --platform ios
+### Local Network (Current Setup)
+- Server runs on your PC
+- Mobile app connects via local IP
+- Perfect for personal use and testing
 
-# Build for Android
-eas build --platform android
-```
+### Internet Deployment (Future)
+1. **Server**: Deploy to cloud service (AWS, Digital Ocean)
+2. **Domain**: Point domain to server
+3. **HTTPS**: Add SSL certificate
+4. **Mobile**: Update server URL in app
 
-## 🔗 API Integration
+## 📦 Expo Configuration
 
-The app communicates with your agent-server using these endpoints:
+For app store deployment, update `app.json`:
 
-- `GET /api/health` - Server health check
-- `POST /api/chat/message` - Send chat messages
-- `GET /api/chat/suggestions` - Get conversation starters
-
-### API Context
-The `ApiContext` manages:
-- Server URL configuration
-- Connection status monitoring  
-- Message sending with error handling
-- Automatic session management
-- Network state awareness
-
-## 🔒 Security & Privacy
-
-- All communication with your server uses HTTP/HTTPS
-- No data sent to external services
-- Messages stored locally only during app session
-- Server URL saved securely in device storage
-
-## 📱 iOS App Store Preparation
-
-### App Store Compatibility
-- Uses only approved APIs and frameworks
-- No restricted functionality
-- Follows Apple's Human Interface Guidelines
-- Implements proper error handling
-
-### Required Changes for App Store
-1. **App Icons**: Add app icons in all required sizes
-2. **Launch Screen**: Create proper launch screen
-3. **Privacy Policy**: Add privacy policy URL
-4. **App Store Description**: Prepare app description and screenshots
-
-### Build Configuration
 ```json
 {
   "expo": {
@@ -180,10 +141,29 @@ The `ApiContext` manages:
     "ios": {
       "bundleIdentifier": "com.yourcompany.agentapp",
       "buildNumber": "1"
+    },
+    "android": {
+      "package": "com.yourcompany.agentapp",
+      "versionCode": 1
     }
   }
 }
 ```
+
+## 🎨 Customization
+
+### Styling
+- Styles are separated from logic in dedicated style files
+- Uses React Native's built-in styling system
+- Color scheme and themes easily configurable
+- Responsive design for different screen sizes
+
+### Adding Features
+The app is structured for easy expansion:
+- Add new screens in `src/screens/`
+- Create services in `src/services/`
+- Extend context in `src/context/`
+- Keep UX and logic cleanly separated
 
 ## 🐛 Troubleshooting
 
@@ -214,20 +194,18 @@ The `ApiContext` manages:
 
 ## 🚀 Deployment
 
-### Local Network (Current Setup)
-- Server runs on your PC
-- Mobile app connects via local IP
-- Perfect for personal use and testing
+### Build for App Stores
 
-### Internet Deployment (Future)
-1. **Server**: Deploy to cloud service (AWS, Digital Ocean)
-2. **Domain**: Point domain to server
-3. **HTTPS**: Add SSL certificate
-4. **Mobile**: Update server URL in app
+1. **Configure app.json** with proper identifiers
+2. **Add required assets** (icons, splash screens)
+3. **Build with EAS Build** or Expo Build
+4. **Submit to stores** via Expo Application Services
 
-## 📄 License
-
-MIT License - see LICENSE file for details
+### Required Assets for App Stores
+- **App Icons**: Add app icons in all required sizes
+- **Launch Screen**: Create proper launch screen
+- **Privacy Policy**: Add privacy policy URL
+- **App Store Description**: Prepare app description and screenshots
 
 ---
 
