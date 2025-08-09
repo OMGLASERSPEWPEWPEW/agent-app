@@ -41,51 +41,75 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
       
       // Create default trainer account with specific ID
       const defaultId = 'default_trainer_001';
-      try {
-        const existingTrainer = await databaseService.getUser(defaultId);
-        if (!existingTrainer) {
-          // FIXED: Pass the specific ID as second parameter
-          const createdId = await databaseService.createUser({
+      
+      // First, check if the user exists
+      const existingTrainer = await databaseService.getUser(defaultId);
+      
+      if (!existingTrainer) {
+        console.log('📝 Creating default trainer account...');
+        try {
+          // Create the user with the specific ID
+          await databaseService.createUser({
             name: 'Demo Trainer',
             email: 'demo@fitnesstrainer.app',
             type: 'trainer',
             specialties: ['Strength Training', 'Weight Loss'],
             experience: 5,
             philosophy: 'Consistent progress over perfection'
-          }, defaultId); // This ensures the user is created with exactly this ID
+          }, defaultId);
           
-          console.log('✅ Created default trainer account with ID:', createdId);
-          setCurrentTrainerId(createdId);
-        } else {
-          console.log('✅ Default trainer account already exists');
-          setCurrentTrainerId(defaultId);
+          console.log('✅ Created default trainer account with ID:', defaultId);
+        } catch (createError) {
+          // If creation fails due to unique constraint (email already exists with different ID),
+          // try creating with a different email
+          console.log('⚠️ First creation attempt failed, trying with unique email...');
+          const uniqueEmail = `demo_${Date.now()}@fitnesstrainer.app`;
+          
+          await databaseService.createUser({
+            name: 'Demo Trainer',
+            email: uniqueEmail,
+            type: 'trainer',
+            specialties: ['Strength Training', 'Weight Loss'],
+            experience: 5,
+            philosophy: 'Consistent progress over perfection'
+          }, defaultId);
+          
+          console.log('✅ Created default trainer account with unique email');
         }
-      } catch (userError) {
-        console.log('✅ Using existing trainer account');
-        setCurrentTrainerId(defaultId);
+      } else {
+        console.log('✅ Default trainer account already exists');
       }
       
+      // Verify the user actually exists now
+      const verifiedTrainer = await databaseService.getUser(defaultId);
+      if (!verifiedTrainer) {
+        throw new Error('Failed to create or verify default trainer account');
+      }
+      
+      setCurrentTrainerId(defaultId);
       setIsReady(true);
       setInitializationError(null);
-      console.log('✅ Database context ready');
+      console.log('✅ Database context ready with trainer ID:', defaultId);
+      
     } catch (error) {
       console.error('❌ Database initialization failed:', error);
       setInitializationError(error instanceof Error ? error.message : 'Unknown database error');
       setIsReady(false);
+      setCurrentTrainerId(null); // Don't set a trainer ID if initialization failed
     }
   };
 
   // User operations
   const createUser = async (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>, customId?: string): Promise<string> => {
     try {
-        const userId = await databaseService.createUser(userData, customId); // Pass customId through
-        console.log(`✅ User created: ${userId}`);
-        return userId;
+      const userId = await databaseService.createUser(userData, customId);
+      console.log(`✅ User created: ${userId}`);
+      return userId;
     } catch (error) {
-        console.error('❌ Failed to create user:', error);
-        throw new Error('Failed to create user');
+      console.error('❌ Failed to create user:', error);
+      throw new Error('Failed to create user');
     }
-    };
+  };
 
   const getUser = async (id: string): Promise<User | null> => {
     try {
@@ -366,8 +390,8 @@ export const useNotes = (trainerId: string) => {
     loadNotes,
     addNote,
     editNote,
-    removeNote,
+    removeNote
   };
 };
 
-// File length: 8,192 characters
+// File length: 11,652 characters
