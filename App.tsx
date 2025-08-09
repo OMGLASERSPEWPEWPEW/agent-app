@@ -11,10 +11,27 @@ import { StatusBar } from 'expo-status-bar';
 import HomeScreen from './src/screens/HomeScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import TrainerDashboard from './src/screens/TrainerDashboard';
+import UserDashboard from './src/screens/UserDashboard';
+import TrainerNotes from './src/screens/TrainerNotes';
+
 import { ApiProvider } from './src/context/ApiContext';
+import { AppModeProvider } from './src/context/AppModeContext';
+import { DatabaseProvider } from './src/context/DatabaseContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+// Stack Navigator for Trainer/User specific screens
+const DashboardStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="TrainerDashboard" component={TrainerDashboard} />
+      <Stack.Screen name="UserDashboard" component={UserDashboard} />
+      <Stack.Screen name="TrainerNotes" component={TrainerNotes} />
+    </Stack.Navigator>
+  );
+};
 
 // Main Tab Navigator
 const TabNavigator = () => {
@@ -56,16 +73,58 @@ const TabNavigator = () => {
   );
 };
 
+// Root Stack Navigator (for modal screens and deep navigation)
+const RootStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* Main Tab Navigator */}
+      <Stack.Screen name="MainTabs" component={TabNavigator} />
+      
+      {/* Dashboard Screens (accessible from Home) */}
+      <Stack.Screen 
+        name="TrainerDashboard" 
+        component={TrainerDashboard}
+        options={{ 
+          presentation: 'card',
+          gestureEnabled: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UserDashboard" 
+        component={UserDashboard}
+        options={{ 
+          presentation: 'card',
+          gestureEnabled: true 
+        }}
+      />
+      
+      {/* Trainer-specific Screens */}
+      <Stack.Screen 
+        name="TrainerNotes" 
+        component={TrainerNotes}
+        options={{ 
+          presentation: 'card',
+          gestureEnabled: true 
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 // Main App Component
 export default function App() {
   return (
     <ApiProvider>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
+      <AppModeProvider>
+        <DatabaseProvider>
+          <StatusBar style="auto" />
+          <NavigationContainer>
+            <RootStack />
+          </NavigationContainer>
+        </DatabaseProvider>
+      </AppModeProvider>
     </ApiProvider>
   );
 }
 
-// File length: 1,608 characters
+// File length: 2,630 characters
