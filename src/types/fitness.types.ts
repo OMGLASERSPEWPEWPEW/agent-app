@@ -192,7 +192,7 @@ export interface DatabaseConfig {
 export interface DatabaseContextType {
   isReady: boolean;
   initializeDatabase: () => Promise<void>;
-  createUser: (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => Promise<string>;
+  createUser: (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>, customId?: string) => Promise<string>;
   getUser: (id: string) => Promise<User | null>;
   createNote: (note: Omit<TrainerNote, 'id' | 'createdAt' | 'updatedAt'>) => Promise<string>;
   getNotes: (trainerId: string) => Promise<TrainerNote[]>;

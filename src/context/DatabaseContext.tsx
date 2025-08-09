@@ -39,11 +39,12 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
       console.log('🔄 Initializing database context...');
       await databaseService.initialize();
       
-      // Create default trainer account if none exists
+      // Create default trainer account with specific ID
+      const defaultId = 'default_trainer_001';
       try {
-        const defaultId = 'default_trainer_001';
         const existingTrainer = await databaseService.getUser(defaultId);
         if (!existingTrainer) {
+          // FIXED: Pass the specific ID as second parameter
           const createdId = await databaseService.createUser({
             name: 'Demo Trainer',
             email: 'demo@fitnesstrainer.app',
@@ -51,16 +52,17 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
             specialties: ['Strength Training', 'Weight Loss'],
             experience: 5,
             philosophy: 'Consistent progress over perfection'
-          });
-          console.log('✅ Created default trainer account');
+          }, defaultId); // This ensures the user is created with exactly this ID
+          
+          console.log('✅ Created default trainer account with ID:', createdId);
           setCurrentTrainerId(createdId);
         } else {
-          console.log('✅ Default trainer account loaded');
+          console.log('✅ Default trainer account already exists');
           setCurrentTrainerId(defaultId);
         }
       } catch (userError) {
         console.log('✅ Using existing trainer account');
-        setCurrentTrainerId('default_trainer_001');
+        setCurrentTrainerId(defaultId);
       }
       
       setIsReady(true);
@@ -74,16 +76,16 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
   };
 
   // User operations
-  const createUser = async (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+  const createUser = async (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>, customId?: string): Promise<string> => {
     try {
-      const userId = await databaseService.createUser(userData);
-      console.log(`✅ User created: ${userId}`);
-      return userId;
+        const userId = await databaseService.createUser(userData, customId); // Pass customId through
+        console.log(`✅ User created: ${userId}`);
+        return userId;
     } catch (error) {
-      console.error('❌ Failed to create user:', error);
-      throw new Error('Failed to create user');
+        console.error('❌ Failed to create user:', error);
+        throw new Error('Failed to create user');
     }
-  };
+    };
 
   const getUser = async (id: string): Promise<User | null> => {
     try {
@@ -264,6 +266,7 @@ export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) 
     getClients,
     createWorkout,
     getWorkouts,
+    currentTrainerId,
   };
 
   // Additional context methods for development/debugging
@@ -367,4 +370,4 @@ export const useNotes = (trainerId: string) => {
   };
 };
 
-// File length: 8,127 characters
+// File length: 8,192 characters

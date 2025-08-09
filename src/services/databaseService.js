@@ -168,11 +168,11 @@ class DatabaseService {
     return new Date().toISOString();
   }
 
-  // User operations
-  async createUser(userData) {
+  // User operations - FIXED to accept custom ID
+  async createUser(userData, customId) {
     this.ensureInitialized();
     
-    const id = this.generateId();
+    const id = customId || this.generateId(); // Use custom ID if provided
     const now = this.getCurrentTimestamp();
     
     const query = `
@@ -181,7 +181,7 @@ class DatabaseService {
     `;
     
     const values = [
-      id,
+      id, // Now uses custom ID if provided
       userData.name,
       userData.email || null,
       userData.type,
@@ -435,4 +435,4 @@ const databaseService = new DatabaseService();
 
 export default databaseService;
 
-// File length: 11,084 characters
+// File length: 11,108 characters
